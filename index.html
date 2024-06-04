@@ -76,7 +76,7 @@
       <button>Console Assert</button>
       <button>Console Clear</button>
       <button>Console Dir</button>
-      <button>Console dirxml</button>
+      <button>Console Dirxml</button>
       <button>Console Group Start</button>
       <button>Console Group End</button>
       <button>Console Table</button>
@@ -88,6 +88,13 @@
   </main>
 
   <script>
+    class CalculatorError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = 'CalculatorError';
+      }
+    }
+
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -95,13 +102,100 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+
+      try {
+        if (!firstNum || !secondNum) {
+          throw new CalculatorError("Both input fields must be filled.");
+        }
+        if (isNaN(firstNum) || isNaN(secondNum)) {
+          throw new CalculatorError("Input values must be numbers.");
+        }
+
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } catch (error) {
+        if (error instanceof CalculatorError) {
+          output.innerHTML = `Calculator Error: ${error.message}`;
+        } else {
+          output.innerHTML = `Error: ${error.message}`;
+        }
+        console.error(error);
+      } finally {
+        console.log('Calculation attempt finished.');
+      }
     });
 
-    let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+    document.querySelector('#error-btns button:nth-child(1)').addEventListener('click', () => {
+      console.log('Console Log Demo');
+    });
 
-    // Start your code here
-    // You may move this JS to another file if you wish
+    document.querySelector('#error-btns button:nth-child(2)').addEventListener('click', () => {
+      console.error('Console Error Demo');
+    });
+
+    document.querySelector('#error-btns button:nth-child(3)').addEventListener('click', () => {
+      console.count('Count Button');
+    });
+
+    document.querySelector('#error-btns button:nth-child(4)').addEventListener('click', () => {
+      console.warn('Console Warn Demo');
+    });
+
+    document.querySelector('#error-btns button:nth-child(5)').addEventListener('click', () => {
+      console.assert(false, 'Assertion is false');
+    });
+
+    document.querySelector('#error-btns button:nth-child(6)').addEventListener('click', () => {
+      console.clear();
+    });
+
+    document.querySelector('#error-btns button:nth-child(7)').addEventListener('click', () => {
+      console.dir(event.target);
+    });
+
+    document.querySelector('#error-btns button:nth-child(8)').addEventListener('click', () => {
+      console.dirxml(event.target);
+    });
+
+    document.querySelector('#error-btns button:nth-child(9)').addEventListener('click', () => {
+      console.group('Console Group');
+    });
+
+    document.querySelector('#error-btns button:nth-child(10)').addEventListener('click', () => {
+      console.groupEnd('Console Group');
+    });
+
+    document.querySelector('#error-btns button:nth-child(11)').addEventListener('click', () => {
+      console.table([{ name: 'John', age: 30 }, { name: 'Jane', age: 25 }]);
+    });
+
+    document.querySelector('#error-btns button:nth-child(12)').addEventListener('click', () => {
+      console.time('Timer');
+    });
+
+    document.querySelector('#error-btns button:nth-child(13)').addEventListener('click', () => {
+      console.timeEnd('Timer');
+    });
+
+    document.querySelector('#error-btns button:nth-child(14)').addEventListener('click', () => {
+      console.trace();
+    });
+
+    document.querySelector('#error-btns button:nth-child(15)').addEventListener('click', () => {
+      try {
+        // Simulating an error
+        let nonExistentElement = document.querySelector('#non-existent');
+        nonExistentElement.innerHTML = 'This will throw an error';
+      } catch (error) {
+        console.error('Caught an error: ', error);
+        alert('A global error was triggered and caught. Check the console for details.');
+      } finally {
+        console.log('Error handling attempt finished.');
+      }
+    });
+
+    //console assert
+    //console trace
+    //console global error
   </script>
 </body>
 
