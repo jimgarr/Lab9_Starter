@@ -141,7 +141,8 @@
     });
 
     document.querySelector('#error-btns button:nth-child(5)').addEventListener('click', () => {
-      console.assert(false, 'Assertion is false');
+      let number = 2;
+      console.assert(number === 3, { number: number, errorMSG: 'The number does not equal 3' });
     });
 
     document.querySelector('#error-btns button:nth-child(6)').addEventListener('click', () => {
@@ -177,25 +178,40 @@
     });
 
     document.querySelector('#error-btns button:nth-child(14)').addEventListener('click', () => {
-      console.trace();
+      function deepest() {
+        console.trace('console.trace');
+      }
+
+      function deeper() {
+        deepest();
+      }
+
+      function deep() {
+        deeper();
+      }
+
+      function handleBtnClick() {
+        deep();
+      }
+
+      handleBtnClick();
     });
 
-    document.querySelector('#error-btns button:nth-child(15)').addEventListener('click', () => {
+
+    document.querySelector('#error-btns button:nth-child(15)').addEventListener('click', function handleBtnClick() {
+      function triggerGlobalError() {
+        // Simulate an error by referencing an undefined variable
+        boom;
+      }
+
       try {
-        // Simulating an error
-        let nonExistentElement = document.querySelector('#non-existent');
-        nonExistentElement.innerHTML = 'This will throw an error';
+        triggerGlobalError();
       } catch (error) {
-        console.error('Caught an error: ', error);
-        alert('A global error was triggered and caught. Check the console for details.');
-      } finally {
-        console.log('Error handling attempt finished.');
+        // Log the error message to the console
+        console.error(`Uncaught ${error.name}: ${error.message} at`);
       }
     });
 
-    //console assert
-    //console trace
-    //console global error
   </script>
 </body>
 
